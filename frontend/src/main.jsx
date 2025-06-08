@@ -1,15 +1,22 @@
+// frontend/src/main.jsx
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import "./index.css"; // Import your global CSS (including Tailwind base styles)
-import { AuthProvider } from "./context/AuthContext"; // Import AuthProvider
+import "./index.css";
+import { AppRoutes } from "./routes/AppRoutes.jsx"; // Assuming AppRoutes is a named export or default export
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CartProvider } from "./context/CartContext.jsx"; // <<< ADD THIS LINE: Import CartProvider
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
+    <CartProvider>
       {" "}
-      {/* Wrap your App with AuthProvider */}
-      <App />
-    </AuthProvider>
+      {/* <<< ADD THIS LINE: Wrap with CartProvider */}
+      <AppRoutes /> {/* Your main routing component */}
+      <ToastContainer />
+    </CartProvider>{" "}
+    {/* <<< ADD THIS LINE: Close CartProvider */}
   </React.StrictMode>
 );
