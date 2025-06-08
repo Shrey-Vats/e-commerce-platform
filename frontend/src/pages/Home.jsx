@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "../api/apiClient";
 import ProductCard from "../components/ProductCard"; // Will be created next
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get("/api/products"); // Fetch products from your backend
+        const { data } = await apiClient.get("/api/products"); // Fetch products from your backend
         setProducts(data);
         setLoading(false);
       } catch (err) {

@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import axios from "axios"; // We'll use axios for API calls
+import apiClient from "../api/apiClient"; // We'll use apiClient for API calls
 import { toast } from "react-toastify"; // For user notifications
 
 // Create the Auth Context
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     dispatch({ type: "LOGIN_REQUEST" });
     try {
-      const { data } = await axios.post("/api/users/login", {
+      const { data } = await apiClient.post("/api/users/login", {
         email,
         password,
       });
@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     dispatch({ type: "REGISTER_REQUEST" });
     try {
-      const { data } = await axios.post("/api/users", {
+      const { data } = await apiClient.post("/api/users", {
         name,
         email,
         password,
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
   // Function to handle user logout
   const logout = async () => {
     try {
-      await axios.post("/api/users/logout");
+      await apiClient.post("/api/users/logout");
       dispatch({ type: "LOGOUT" });
       toast.info("Logged out successfully!");
     } catch (error) {

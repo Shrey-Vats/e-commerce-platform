@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../api/apiClient";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 
@@ -16,7 +16,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`/api/products/${id}`);
+        const { data } = await apiClient.get(`/api/products/${id}`);
         setProduct(data);
         setLoading(false);
       } catch (err) {
