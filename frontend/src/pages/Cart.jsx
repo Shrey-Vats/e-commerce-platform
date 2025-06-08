@@ -1,6 +1,6 @@
 import React from "react";
 
-const Home = () => {
+const Cart = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold">Home Page</h1>
@@ -9,4 +9,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Cart;
