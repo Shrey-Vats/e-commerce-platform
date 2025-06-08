@@ -194,4 +194,5 @@ export {
   getUsers,
   deleteUser,
   updateUser,
+  getUserById,
 };
