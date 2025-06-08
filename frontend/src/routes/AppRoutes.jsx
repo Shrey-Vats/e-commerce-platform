@@ -19,6 +19,7 @@ import Register from "../pages/Register";
 
 // Protected Pages
 import Checkout from "../pages/Checkout";
+import UserProfileScreen from "../pages/UserProfileScreen"; // <<< ADD THIS LINE: Import UserProfileScreen
 
 // Admin Pages
 import AdminDashboard from "../pages/AdminDashboard";
@@ -47,8 +48,8 @@ const router = createBrowserRouter(
         {/* Protected Routes (requires user login) */}
         <Route path="" element={<PrivateRoute />}>
           <Route path="/checkout" element={<Checkout />} />
-          {/* Example: Add a user profile update route here */}
-          {/* <Route path="/profile" element={<UserProfileScreen />} /> */}
+          <Route path="/profile" element={<UserProfileScreen />} />{" "}
+          {/* <<< ADD THIS LINE: Profile Route */}
         </Route>
       </Route>
 
