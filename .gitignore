@@ -15,6 +15,9 @@ dist-ssr
 # .gitignore
 node_modules/
 
+.Environment variables
+.env
+.env.local
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
