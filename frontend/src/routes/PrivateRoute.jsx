@@ -1,9 +1,9 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const PrivateRoute = () => {
-  // Authentication logic will go here
-  // For now, it just passes through
-  return <Outlet />;
+  const { userInfo } = useAuth(); // Get user info from context
+  return userInfo ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;
