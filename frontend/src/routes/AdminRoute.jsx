@@ -1,9 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const AdminRoute = () => {
-  // Authentication logic will go here
-  // For now, it just passes through
-  return <Outlet />;
+  const { userInfo } = useAuth(); // Get user info from context
+  // Check if user is logged in AND is an admin
+  return userInfo && userInfo.isAdmin ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 export default AdminRoute;
