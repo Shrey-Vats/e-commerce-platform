@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 import apiClient from "../api/apiClient"; // Import apiClient
-import { useAuth } from "../hooks/useAuth"; // To check for admin status for 'mark as delivered'
+import  useAuth  from "../hooks/useAuth"; // To check for admin status for 'mark as delivered'
 
 const OrderDetailsScreen = () => {
   const { id: orderId } = useParams();
