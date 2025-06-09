@@ -1,8 +1,9 @@
+// frontend/src/pages/Login.jsx
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import Loader from "../components/Loader";
-import { toast } from "react-toastify"; // Ensure toast is imported for messages
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,28 +23,27 @@ const Login = () => {
     try {
       await login(email, password);
     } catch (err) {
-      // Error is already handled by useAuth and toast will show it,
-      // but you can add more specific client-side validation here if needed.
       toast.error(error || "Login failed. Please check your credentials.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[calc(100vh-200px)] py-10">
-      <div className="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md border border-gray-100">
-        <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">
+    // Added background gradient, full height, and centered flex
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 py-10 px-4">
+      <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md border border-gray-100 transform transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] animate-fade-in-up">
+        <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-900">
           Welcome Back
         </h1>
         <form onSubmit={submitHandler}>
           <div className="mb-6">
             <label
-              className="block text-gray-700 text-sm font-medium mb-2"
+              className="block text-gray-700 text-sm font-semibold mb-2" // Font-weight slightly bolder
               htmlFor="email"
             >
               Email Address
             </label>
             <input
-              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-3 focus:ring-indigo-300 focus:border-indigo-400 transition-all duration-300 transform focus:scale-[1.01]" // Stronger focus ring, subtle scale on focus
               id="email"
               type="email"
               placeholder="Enter your email"
@@ -54,13 +54,13 @@ const Login = () => {
           </div>
           <div className="mb-8">
             <label
-              className="block text-gray-700 text-sm font-medium mb-2"
+              className="block text-gray-700 text-sm font-semibold mb-2"
               htmlFor="password"
             >
               Password
             </label>
             <input
-              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+              className="shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-3 focus:ring-indigo-300 focus:border-indigo-400 transition-all duration-300 transform focus:scale-[1.01]"
               id="password"
               type="password"
               placeholder="Enter your password"
@@ -71,7 +71,7 @@ const Login = () => {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline w-full text-lg shadow-md hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-3 focus:ring-indigo-300 focus:shadow-outline w-full text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105" // Added gradient, stronger shadow, scale on hover
               type="submit"
               disabled={loading}
             >
@@ -83,7 +83,7 @@ const Login = () => {
           New Customer?{" "}
           <Link
             to="/register"
-            className="text-indigo-600 hover:underline font-semibold"
+            className="text-indigo-600 hover:text-indigo-800 hover:underline font-bold transition-colors duration-200" // Stronger hover effect
           >
             Register Here
           </Link>

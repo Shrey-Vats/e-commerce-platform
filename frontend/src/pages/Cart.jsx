@@ -1,24 +1,23 @@
 // frontend/src/pages/Cart.jsx
 
-import React, { useEffect } from "react";
+import React from "react"; // Removed useState, useEffect as they are no longer needed for cartItems
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { FaTrash, FaShoppingCart } from "react-icons/fa";
-import Message from "../components/Message";
-import { useCart } from "../context/CartContext"; // <<< ADD THIS LINE: Import useCart hook
-import { toast } from "react-toastify"; // Import toast for messages
+import { useCart } from "../context/CartContext"; // <<< NEW: Import useCart hook
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateCartItemQty } = useCart(); // <<< ADD THIS LINE: Get cart functions
+  // NEW: Get cartItems and cart manipulation functions from the context
+  const { cartItems, removeFromCart, updateCartItemQty } = useCart();
 
-  // Calculate totals from localStorage, as CartContext updates them there
-  const itemsPrice = parseFloat(localStorage.getItem("itemsPrice") || 0);
-  const shippingPrice = parseFloat(localStorage.getItem("shippingPrice") || 0);
-  const taxPrice = parseFloat(localStorage.getItem("taxPrice") || 0);
-  const totalPrice = parseFloat(localStorage.getItem("totalPrice") || 0);
+  // The local state and useEffect for cartItems are now removed.
+  // The cartItems are directly from the global context.
 
-  const checkoutHandler = () => {
-    navigate("/login?redirect=/checkout"); // Redirect to checkout after login
+  // Use the context's functions for actions
+  const updateCartQtyHandler = (item, qty) => {
+    // Changed to take item object, as updateCartItemQty expects it
+    updateCartItemQty(item, Number(qty));
   };
 
   const removeItemHandler = (id) => {
@@ -27,56 +26,78 @@ const Cart = () => {
     }
   };
 
-  const updateQtyHandler = (product, qty) => {
-    updateCartItemQty(product, Number(qty));
+  const checkoutHandler = () => {
+    navigate("/login?redirect=/checkout"); // Redirect to login if not authenticated, then checkout
   };
 
+  // NEW: Calculate totals from localStorage, as CartContext now updates them there
+  // This ensures consistency with the Navbar and potentially other components
+  const itemsPrice = parseFloat(localStorage.getItem("itemsPrice") || 0);
+  const shippingPrice = parseFloat(localStorage.getItem("shippingPrice") || 0);
+  const taxPrice = parseFloat(localStorage.getItem("taxPrice") || 0);
+  const totalPrice = parseFloat(localStorage.getItem("totalPrice") || 0);
+
+  // You can still calculate totalItems locally if needed for display, based on cartItems from context
+  const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
+
   return (
-    <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-200px)]">
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
-        <FaShoppingCart className="inline-block mr-3 text-indigo-600" />{" "}
-        Shopping Cart
+    <div className="container mx-auto px-4 py-10 min-h-[calc(100vh-200px)]">
+      <h1 className="text-4xl md:text-5xl font-extrabold mb-10 text-gray-900 text-center">
+        Your Shopping Cart
       </h1>
 
       {cartItems.length === 0 ? (
-        <Message type="info">
-          Your cart is empty.{" "}
-          <Link to="/" className="text-indigo-600 hover:underline">
-            Go back to shop
+        <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-lg mx-auto">
+          <FaShoppingCart className="text-indigo-400 text-6xl mx-auto mb-4" />
+          <p className="text-xl text-gray-700 mb-4">
+            Your cart is currently empty.
+          </p>
+          <Link
+            to="/"
+            className="inline-block bg-indigo-600 text-white font-bold py-3 px-6 rounded-full hover:bg-indigo-700 transition-colors duration-300 shadow-lg"
+          >
+            Start Shopping!
           </Link>
-        </Message>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items Column */}
-          <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-xl p-6">
             {cartItems.map((item) => (
               <div
                 key={item.product}
-                className="flex items-center border-b border-gray-200 py-4 last:border-b-0"
+                className="flex flex-col sm:flex-row items-center border-b border-gray-200 py-6 last:border-b-0"
               >
-                <div className="w-24 h-24 mr-4 flex-shrink-0">
+                <div className="w-32 h-32 mr-6 mb-4 sm:mb-0 flex-shrink-0">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover rounded-md"
+                    className="w-full h-full object-cover rounded-md shadow-sm"
                   />
                 </div>
-                <div className="flex-grow">
+                <div className="flex-grow text-center sm:text-left">
                   <Link
                     to={`/product/${item.product}`}
-                    className="text-xl font-semibold text-gray-800 hover:text-indigo-600 transition-colors"
+                    className="text-xl font-semibold text-gray-800 hover:text-indigo-600 transition-colors duration-200 block mb-2"
                   >
                     {item.name}
                   </Link>
-                  <p className="text-gray-600 text-lg my-1">
+                  <p className="text-indigo-700 text-2xl font-bold mb-3">
                     ${item.price.toFixed(2)}
                   </p>
-                  <div className="flex items-center">
-                    <span className="text-gray-700 mr-2">Qty:</span>
+                  <div className="flex items-center justify-center sm:justify-start">
+                    <label
+                      htmlFor={`qty-${item.product}`}
+                      className="font-medium text-gray-700 mr-2"
+                    >
+                      Qty:
+                    </label>
                     <select
-                      className="p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
+                      id={`qty-${item.product}`}
+                      className="border border-gray-300 rounded-md py-2 px-3 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                       value={item.qty}
-                      onChange={(e) => updateQtyHandler(item, e.target.value)}
+                      onChange={
+                        (e) => updateCartQtyHandler(item, e.target.value) // Pass item object here
+                      }
                     >
                       {[...Array(item.countInStock).keys()].map((x) => (
                         <option key={x + 1} value={x + 1}>
@@ -84,57 +105,61 @@ const Cart = () => {
                         </option>
                       ))}
                     </select>
-                    <button
-                      onClick={() => removeItemHandler(item.product)}
-                      className="ml-4 p-2 text-red-600 hover:text-red-800 transition-colors"
-                    >
-                      <FaTrash className="text-xl" />
-                    </button>
                   </div>
                 </div>
-                <div className="text-2xl font-bold text-gray-900 ml-auto">
-                  ${(item.qty * item.price).toFixed(2)}
+                <div className="mt-4 sm:mt-0 sm:ml-auto">
+                  <button
+                    onClick={() => removeItemHandler(item.product)}
+                    className="text-red-600 hover:text-red-800 transition-colors duration-200 p-2 rounded-full hover:bg-red-50"
+                    aria-label="Remove item"
+                  >
+                    <FaTrash size={20} />
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Order Summary Column */}
-          <div className="lg:col-span-1 bg-white p-6 rounded-lg shadow-xl h-fit">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 border-b pb-4">
+          <div className="lg:col-span-1 bg-white p-8 rounded-lg shadow-xl h-fit">
+            <h2 className="text-3xl font-bold mb-6 border-b-2 pb-4 text-gray-800">
               Order Summary
             </h2>
-            <div className="space-y-3 text-lg text-gray-700">
-              <div className="flex justify-between">
-                <span>Items:</span>
-                <span className="font-semibold">${itemsPrice.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping:</span>
-                <span className="font-semibold">
-                  ${shippingPrice.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax:</span>
-                <span className="font-semibold">${taxPrice.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between font-bold text-gray-900 text-xl pt-4 border-t mt-4">
-                <span>Total:</span>
-                <span>${totalPrice.toFixed(2)}</span>
-              </div>
+            {/* Displaying details from localStorage, managed by CartContext */}
+            <div className="flex justify-between items-center text-lg mb-3">
+              <span className="font-semibold text-gray-700">Items Price:</span>
+              <span className="text-xl font-bold text-gray-900">
+                ${itemsPrice.toFixed(2)}
+              </span>
             </div>
+            <div className="flex justify-between items-center text-lg mb-3">
+              <span className="font-semibold text-gray-700">
+                Shipping Price:
+              </span>
+              <span className="text-xl font-bold text-gray-900">
+                ${shippingPrice.toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-lg mb-3">
+              <span className="font-semibold text-gray-700">Tax Price:</span>
+              <span className="text-xl font-bold text-gray-900">
+                ${taxPrice.toFixed(2)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-2xl font-bold mb-8 pt-2 border-t border-gray-200">
+              <span className="text-gray-800">Total:</span>
+              <span className="text-indigo-700">${totalPrice.toFixed(2)}</span>
+            </div>
+
             <button
               onClick={checkoutHandler}
-              className={`w-full mt-8 py-3 text-xl font-bold rounded-lg transition-colors duration-300 shadow-md
-                ${
-                  cartItems.length === 0
-                    ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                    : "bg-indigo-600 text-white hover:bg-indigo-700"
-                }`}
+              className={`w-full py-4 px-6 rounded-full text-white font-bold text-lg flex items-center justify-center transition-all duration-300 shadow-md ${
+                cartItems.length === 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-700 hover:scale-105"
+              }`}
               disabled={cartItems.length === 0}
             >
-              Proceed To Checkout
+              Proceed to Checkout
             </button>
           </div>
         </div>

@@ -61,7 +61,9 @@ const Home = () => {
         ) : error ? (
           <p className="text-red-500 text-center text-lg">{error}</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            {" "}
+            {/* Changed lg:grid-cols-4 to lg:grid-cols-3 and added xl:grid-cols-4, also gap-8 to gap-10 */}
             {products.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}

@@ -1,57 +1,276 @@
+// frontend/src/pages/AdminDashboard.jsx
 import React from "react";
+import {
+  FaUsers,
+  FaCube,
+  FaShoppingCart,
+  FaDollarSign,
+  FaChartLine,
+} from "react-icons/fa"; // Icons
 import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
+  // --- Dummy Data (as you have real data in DB, this is for structure/UI demo) ---
+  const totalUsers = 125;
+  const totalProducts = 48;
+  const totalOrders = 89;
+  const totalSales = 12500.75; // Example currency value
+
+  const recentOrders = [
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1f2",
+      user: "Alice Johnson",
+      totalAmount: 120.5,
+      status: "Processing",
+      date: "2025-06-07",
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1f3",
+      user: "Bob Williams",
+      totalAmount: 245.0,
+      status: "Shipped",
+      date: "2025-06-06",
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1f4",
+      user: "Charlie Brown",
+      totalAmount: 75.2,
+      status: "Delivered",
+      date: "2025-06-05",
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1f5",
+      user: "David Lee",
+      totalAmount: 300.0,
+      status: "Processing",
+      date: "2025-06-04",
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1f6",
+      user: "Eve Davis",
+      totalAmount: 50.99,
+      status: "Delivered",
+      date: "2025-06-03",
+    },
+  ];
+
+  const recentProducts = [
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1a1",
+      name: "Wireless Headphones Pro",
+      price: 149.99,
+      stock: 50,
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1a2",
+      name: "Smartwatch Ultra 2",
+      price: 299.0,
+      stock: 30,
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1a3",
+      name: "Portable Bluetooth Speaker X",
+      price: 65.5,
+      stock: 120,
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1a4",
+      name: "Gaming Mouse RGB",
+      price: 39.99,
+      stock: 80,
+    },
+    {
+      _id: "6662d5f3a0c2e6b7f8d9e1a5",
+      name: "Ergonomic Keyboard",
+      price: 89.0,
+      stock: 40,
+    },
+  ];
+  // --- End Dummy Data ---
+
   return (
-    <div className="py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-900">
-        Admin Dashboard
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 p-8">
+      <h1 className="text-5xl font-extrabold text-gray-900 mb-10 flex items-center drop-shadow-md">
+        <FaChartLine className="mr-5 text-indigo-700" /> Admin Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Products Management Card */}
-        <Link to="/admin/products" className="block">
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer text-center">
-            <h2 className="text-2xl font-semibold text-blue-600 mb-2">
-              Manage Products
+      {/* Analytics Cards Section - More pronounced styling */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        {/* Total Users Card */}
+        <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100 flex items-center justify-between transition-all duration-300 hover:shadow-indigo-500/30 hover:-translate-y-1 hover:scale-102">
+          <div className="text-left">
+            <p className="text-gray-600 text-lg font-medium">Total Users</p>
+            <h2 className="text-5xl font-extrabold text-indigo-700 mt-2">
+              {totalUsers}
             </h2>
-            <p className="text-gray-700">
-              Add, edit, or delete products in your store.
-            </p>
-            <div className="mt-4 text-blue-500 font-bold">
-              Go to Products &rarr;
-            </div>
           </div>
-        </Link>
+          <FaUsers className="text-indigo-400 text-6xl opacity-40" />
+        </div>
 
-        {/* Orders Management Card */}
-        <Link to="/admin/orders" className="block">
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer text-center">
-            <h2 className="text-2xl font-semibold text-green-600 mb-2">
-              Manage Orders
+        {/* Total Products Card */}
+        <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100 flex items-center justify-between transition-all duration-300 hover:shadow-green-500/30 hover:-translate-y-1 hover:scale-102">
+          <div className="text-left">
+            <p className="text-gray-600 text-lg font-medium">Total Products</p>
+            <h2 className="text-5xl font-extrabold text-green-700 mt-2">
+              {totalProducts}
             </h2>
-            <p className="text-gray-700">View and update customer orders.</p>
-            <div className="mt-4 text-green-500 font-bold">
-              Go to Orders &rarr;
-            </div>
           </div>
-        </Link>
+          <FaCube className="text-green-400 text-6xl opacity-40" />
+        </div>
 
-        {/* Users Management Card */}
-        <Link to="/admin/users" className="block">
-          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer text-center">
-            <h2 className="text-2xl font-semibold text-purple-600 mb-2">
-              Manage Users
+        {/* Total Orders Card */}
+        <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100 flex items-center justify-between transition-all duration-300 hover:shadow-red-500/30 hover:-translate-y-1 hover:scale-102">
+          <div className="text-left">
+            <p className="text-gray-600 text-lg font-medium">Total Orders</p>
+            <h2 className="text-5xl font-extrabold text-red-700 mt-2">
+              {totalOrders}
             </h2>
-            <p className="text-gray-700">View and manage user accounts.</p>
-            <div className="mt-4 text-purple-500 font-bold">
-              Go to Users &rarr;
-            </div>
           </div>
-        </Link>
+          <FaShoppingCart className="text-red-400 text-6xl opacity-40" />
+        </div>
+
+        {/* Total Sales Card */}
+        <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100 flex items-center justify-between transition-all duration-300 hover:shadow-yellow-500/30 hover:-translate-y-1 hover:scale-102">
+          <div className="text-left">
+            <p className="text-gray-600 text-lg font-medium">Total Sales</p>
+            <h2 className="text-5xl font-extrabold text-yellow-700 mt-2">
+              ${totalSales.toFixed(2)}
+            </h2>
+          </div>
+          <FaDollarSign className="text-yellow-400 text-6xl opacity-40" />
+        </div>
       </div>
 
-      {/* You can add summary statistics or quick actions here later */}
+      {/* Recent Activity Sections - Enhanced Tables */}
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
+        {/* Recent Orders Table */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+          <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+            <FaShoppingCart className="mr-4 text-indigo-600" /> Recent Orders
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 border border-gray-100 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Order ID
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    User
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Total
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {recentOrders.map((order) => (
+                  <tr
+                    key={order._id}
+                    className="hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 truncate max-w-[120px]">
+                      {order._id}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {order.user}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                      ${order.totalAmount.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span
+                        className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full shadow-sm ${
+                          order.status === "Delivered"
+                            ? "bg-green-100 text-green-800"
+                            : order.status === "Shipped"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {order.date}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <Link
+                        to={`/admin/order/${order._id}`}
+                        className="text-indigo-600 hover:text-indigo-800 font-bold transition-colors"
+                      >
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Recent Products Table */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+          <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+            <FaCube className="mr-4 text-green-600" /> Recent Products
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 border border-gray-100 rounded-lg overflow-hidden">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Product Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Stock
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {recentProducts.map((product) => (
+                  <tr
+                    key={product._id}
+                    className="hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {product.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
+                      ${product.price.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                      {product.stock}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <Link
+                        to={`/admin/product/${product._id}/edit`}
+                        className="text-indigo-600 hover:text-indigo-800 font-bold transition-colors"
+                      >
+                        Edit
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

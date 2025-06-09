@@ -140,6 +140,47 @@ export const CartProvider = ({ children }) => {
   );
 };
 
+// frontend/src/context/CartContext.jsx
+
+// ... (rest of your imports and code)
+
+// Action: Add Item to Cart
+const addToCart = (product, qty) => {
+    const item = {
+      product: product._id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      // Add a safeguard: Use product.countInStock if available, otherwise default to 0 or 1
+      countInStock: typeof product.countInStock === 'number' && product.countInStock >= 0
+                      ? product.countInStock // Use it if it's a valid non-negative number
+                      : 0, // Default to 0 or some other safe value if missing/invalid
+      qty,
+    };
+    dispatch({ type: "ADD_ITEM", payload: item });
+    toast.success(`${qty} of ${product.name} added to cart!`);
+  };
+  
+  // Action: Update Item Quantity
+  const updateCartItemQty = (product, qty) => {
+    const item = {
+      product: product._id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      // Add same safeguard here
+      countInStock: typeof product.countInStock === 'number' && product.countInStock >= 0
+                      ? product.countInStock
+                      : 0,
+      qty,
+    };
+    dispatch({ type: "ADD_ITEM", payload: item });
+    toast.success("Cart quantity updated.");
+  };
+  
+  // ... (rest of your code)
+
+  
 // 4. Custom Hook to use Cart Context
 export const useCart = () => {
   return useContext(CartContext);

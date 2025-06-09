@@ -2,13 +2,13 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { useCart } from "../context/CartContext"; // <<< ADD THIS LINE: Import useCart hook
-import { useSelector } from "react-redux"; // Assuming you still use Redux for user info
+import { FaShoppingCart, FaUser, FaUserCog } from "react-icons/fa";
+import { useCart } from "../context/CartContext";
+import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
-  const { cartItems } = useCart(); // <<< ADD THIS LINE: Get cartItems from context
-  const { userInfo } = useSelector((state) => state.auth); // Assuming Redux for user info
+  const { cartItems } = useCart();
+  const { userInfo } = useAuth(); // Get userInfo from your useAuth hook
 
   // Calculate total quantity of items in cart for display
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
@@ -26,19 +26,31 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <div className="flex items-center space-x-6">
+          {/* Admin Dashboard Link (Conditional) */}
+          {userInfo && userInfo.isAdmin && (
+            <Link
+              to="/admin" // <<< CHANGED: Point to /admin instead of /admin/dashboard
+              className="flex items-center text-lg hover:text-indigo-200 transition-colors"
+            >
+              <FaUserCog className="text-2xl mr-2" /> Admin
+            </Link>
+          )}
+
+          {/* Cart Link */}
           <Link
             to="/cart"
             className="flex items-center text-lg hover:text-indigo-200 transition-colors relative"
           >
             <FaShoppingCart className="text-2xl mr-2" /> Cart
-            {cartItemCount > 0 && ( // <<< Conditional badge
+            {cartItemCount > 0 && (
               <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                 {cartItemCount}
               </span>
             )}
           </Link>
+
+          {/* User Profile / Sign In Link */}
           {userInfo ? (
-            // If logged in, show username and dropdown (simplified for now)
             <Link
               to="/profile"
               className="flex items-center text-lg hover:text-indigo-200 transition-colors"
@@ -46,7 +58,6 @@ const Navbar = () => {
               <FaUser className="text-2xl mr-2" /> {userInfo.name}
             </Link>
           ) : (
-            // If not logged in, show login link
             <Link
               to="/login"
               className="flex items-center text-lg hover:text-indigo-200 transition-colors"
