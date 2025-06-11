@@ -36,19 +36,12 @@ const getBannerById = asyncHandler(async (req, res) => {
 // @route   POST /api/banners
 // @access  Private/Admin
 const createBanner = asyncHandler(async (req, res) => {
-  const { title, subtitle, imageUrl, link, altText, isActive, order } =
-    req.body;
-
+  const { imageUrl, isActive, order } = req.body;
   const banner = new Banner({
-    title,
-    subtitle,
     imageUrl,
-    link,
-    altText,
     isActive: isActive !== undefined ? isActive : true,
     order: order !== undefined ? order : 0,
   });
-
   const createdBanner = await banner.save();
   res.status(201).json(createdBanner);
 });
@@ -57,20 +50,12 @@ const createBanner = asyncHandler(async (req, res) => {
 // @route   PUT /api/banners/:id
 // @access  Private/Admin
 const updateBanner = asyncHandler(async (req, res) => {
-  const { title, subtitle, imageUrl, link, altText, isActive, order } =
-    req.body;
-
+  const { imageUrl, isActive, order } = req.body;
   const banner = await Banner.findById(req.params.id);
-
   if (banner) {
-    banner.title = title || banner.title;
-    banner.subtitle = subtitle || banner.subtitle;
     banner.imageUrl = imageUrl || banner.imageUrl;
-    banner.link = link !== undefined ? link : banner.link;
-    banner.altText = altText || banner.altText;
     banner.isActive = isActive !== undefined ? isActive : banner.isActive;
     banner.order = order !== undefined ? order : banner.order;
-
     const updatedBanner = await banner.save();
     res.json(updatedBanner);
   } else {

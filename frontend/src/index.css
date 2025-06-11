@@ -2,15 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Define your light mode colors as CSS variables in the root */
+:root {
+  /* Main Background & Text */
+  --color-bg-default: #F8FAFC; /* Light background for the whole page (Slate-50) */
+  --color-text-default: #1F2937; /* Dark text for the whole page (Gray-800) */
+
+  /* Card/Section Backgrounds */
+  --color-bg-card: #FFFFFF; /* White for cards, modals, etc. */
+
+  /* Headings & Primary Accent */
+  --color-text-heading: #111827; /* Darker text for headings (Gray-900) */
+  --color-primary: #6366F1; /* Primary brand color (Indigo-500) */
+  --color-primary-hover: #4F46E5; /* Primary hover state (Indigo-600) */
+
+  /* Secondary Text (e.g., paragraphs, descriptions) */
+  --color-text-secondary: #4B5563; /* Gray-700 */
+
+  /* Border & Divider Colors */
+  --color-border-light: #E5E7EB; /* Gray-200 */
+}
+
+/* Override CSS variables for dark mode when html has the 'dark' class */
+html.dark {
+  /* Main Background & Text */
+  --color-bg-default: #1E293B; /* Dark background for the whole page (Slate-800) */
+  --color-text-default: #F3F4F6; /* Light text for the whole page (Gray-100) */
+
+  /* Card/Section Backgrounds */
+  --color-bg-card: #334155; /* Darker slate for cards (Slate-700) */
+
+  /* Headings & Primary Accent */
+  --color-text-heading: #F9FAFB; /* Lighter text for headings (Gray-50) */
+  --color-primary: #818CF8; /* Primary brand color (Indigo-400) */
+  --color-primary-hover: #6366F1; /* Primary hover state (Indigo-500) */
+
+  /* Secondary Text */
+  --color-text-secondary: #D1D5DB; /* Gray-300 */
+
+  /* Border & Divider Colors */
+  --color-border-light: #475569; /* Slate-600 */
+}
+
+/* Your existing animations */
 @keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-down {
@@ -18,14 +55,8 @@
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-up {

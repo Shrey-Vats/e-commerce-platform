@@ -3,13 +3,7 @@ import mongoose from "mongoose"; // Use import
 
 const bannerSchema = mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    subtitle: {
-      type: String,
-    },
+    // Only imageUrl, isActive, order
     imageUrl: {
       type: String,
       required: true,
@@ -17,10 +11,6 @@ const bannerSchema = mongoose.Schema(
     link: {
       type: String,
       default: "#",
-    },
-    altText: {
-      type: String,
-      required: true,
     },
     isActive: {
       type: Boolean,

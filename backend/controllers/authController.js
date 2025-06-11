@@ -1,6 +1,116 @@
+// @desc    Promote user to seller (Admin only)
+// @route   PATCH /api/users/:id/make-seller
+// @access  Private/Admin
 import asyncHandler from "express-async-handler"; // A simple middleware for handling exceptions inside of async express routes
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
+const makeSeller = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  user.isSeller = true;
+  await user.save();
+  res.json({ message: `User ${user.name} is now a seller.`, isSeller: true });
+});
+// @desc    Get all addresses for the user
+// @route   GET /api/users/addresses
+// @access  Private
+const getAddresses = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    res.json({
+      addresses: user.addresses || [],
+      defaultAddress: user.defaultAddress || 0,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+// @desc    Add a new address
+// @route   POST /api/users/addresses
+// @access  Private
+const addAddress = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.addresses = user.addresses || [];
+    user.addresses.push(req.body);
+    // If this is the first address, set as default
+    if (user.addresses.length === 1) user.defaultAddress = 0;
+    await user.save();
+    res
+      .status(201)
+      .json({ addresses: user.addresses, defaultAddress: user.defaultAddress });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+// @desc    Update an address
+// @route   PUT /api/users/addresses/:idx
+// @access  Private
+const updateAddress = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const idx = parseInt(req.params.idx, 10);
+  if (user && user.addresses && user.addresses[idx]) {
+    user.addresses[idx] = req.body;
+    await user.save();
+    res.json({
+      addresses: user.addresses,
+      defaultAddress: user.defaultAddress,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Address not found");
+  }
+});
+
+// @desc    Delete an address
+// @route   DELETE /api/users/addresses/:idx
+// @access  Private
+const deleteAddress = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const idx = parseInt(req.params.idx, 10);
+  if (user && user.addresses && user.addresses[idx] !== undefined) {
+    user.addresses.splice(idx, 1);
+    // Adjust defaultAddress if needed
+    if (user.defaultAddress >= user.addresses.length) {
+      user.defaultAddress = 0;
+    }
+    await user.save();
+    res.json({
+      addresses: user.addresses,
+      defaultAddress: user.defaultAddress,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Address not found");
+  }
+});
+
+// @desc    Set default address
+// @route   PUT /api/users/addresses/default/:idx
+// @access  Private
+const setDefaultAddress = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  const idx = parseInt(req.params.idx, 10);
+  if (user && user.addresses && user.addresses[idx]) {
+    user.defaultAddress = idx;
+    await user.save();
+    res.json({
+      addresses: user.addresses,
+      defaultAddress: user.defaultAddress,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Address not found");
+  }
+});
+
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -195,4 +305,10 @@ export {
   deleteUser,
   updateUser,
   getUserById,
+  addAddress,
+  deleteAddress,
+  getAddresses,
+  setDefaultAddress,
+  updateAddress,
+  makeSeller,
 };

@@ -1,5 +1,18 @@
+// backend/models/User.js
+
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+
+const addressSchema = mongoose.Schema(
+  {
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    country: { type: String, required: true },
+    label: { type: String }, // e.g. 'Home', 'Work', etc.
+  },
+  { _id: false }
+);
 
 const userSchema = mongoose.Schema(
   {
@@ -21,6 +34,20 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    // NEW FIELDS FOR SELLER SYSTEM
+    isSeller: {
+      type: Boolean,
+      required: true,
+      default: false, // Default to false, users are not sellers by default
+    },
+    brandName: {
+      type: String,
+    },
+    location: {
+      type: String,
+    },
+    addresses: [addressSchema], // Array of addresses
+    defaultAddress: { type: Number, default: 0 }, // Index in addresses array
   },
   {
     timestamps: true, // Adds createdAt and updatedAt timestamps

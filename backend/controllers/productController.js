@@ -4,8 +4,13 @@ import Product from "../models/Product.js";
 // @desc    Fetch all products
 // @route   GET /api/products
 // @access  Public
+// If ?seller=me is passed, only return products for the logged-in seller
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}); // Find all products
+  let filter = {};
+  if (req.query.seller === "me" && req.user && req.user.isSeller) {
+    filter.seller = req.user._id;
+  }
+  const products = await Product.find(filter);
   res.json(products);
 });
 
@@ -25,16 +30,25 @@ const getProductById = asyncHandler(async (req, res) => {
 
 // @desc    Delete a product (Admin only)
 // @route   DELETE /api/products/:id
-// @access  Private/Admin
+// @access  Private/Seller (or Admin)
 const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
-  if (product) {
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  // Only allow if admin or seller owns the product
+  if (
+    req.user.isAdmin ||
+    (req.user.isSeller && product.seller.toString() === req.user._id.toString())
+  ) {
     await Product.deleteOne({ _id: product._id });
     res.json({ message: "Product removed" });
   } else {
-    res.status(404);
-    throw new Error("Product not found");
+    res.status(403);
+    throw new Error("Not authorized to delete this product");
   }
 });
 
@@ -45,13 +59,15 @@ const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Sample Name",
     price: 0,
-    user: req.user._id, // User who created the product (from auth middleware)
+    seller: req.user._id, // Seller who created the product (from auth middleware)
     image: "/images/sample.jpg",
     brand: "Sample Brand",
     category: "Sample Category",
     countInStock: 0,
     numReviews: 0,
     description: "Sample description",
+    images: [],
+    videos: [],
   });
 
   const createdProduct = await product.save();
@@ -60,14 +76,32 @@ const createProduct = asyncHandler(async (req, res) => {
 
 // @desc    Update a product (Admin only)
 // @route   PUT /api/products/:id
-// @access  Private/Admin
+// @access  Private/Seller (or Admin)
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
-    req.body;
+  const {
+    name,
+    price,
+    description,
+    image,
+    brand,
+    category,
+    countInStock,
+    images,
+    videos,
+  } = req.body;
 
   const product = await Product.findById(req.params.id);
 
-  if (product) {
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  // Only allow if admin or seller owns the product
+  if (
+    req.user.isAdmin ||
+    (req.user.isSeller && product.seller.toString() === req.user._id.toString())
+  ) {
     product.name = name || product.name;
     product.price = price || product.price;
     product.description = description || product.description;
@@ -76,12 +110,14 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.category = category || product.category;
     product.countInStock =
       countInStock !== undefined ? countInStock : product.countInStock;
+    if (images) product.images = images;
+    if (videos) product.videos = videos;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {
-    res.status(404);
-    throw new Error("Product not found");
+    res.status(403);
+    throw new Error("Not authorized to update this product");
   }
 });
 

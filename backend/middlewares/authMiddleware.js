@@ -1,5 +1,7 @@
+// backend/middlewares/authMiddleware.js
+
 import jwt from "jsonwebtoken";
-import asyncHandler from "express-async-handler";
+import asyncHandler from "express-async-handler"; // CORRECT: Already using this package
 import User from "../models/User.js";
 
 const protect = asyncHandler(async (req, res, next) => {
@@ -17,7 +19,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
       next(); // Proceed to the next middleware or route handler
     } catch (error) {
-      console.error("Not authorized, token failed".red);
+      console.error("Not authorized, token failed"); // Removed .red as colors library might not be installed
       res.status(401);
       throw new Error("Not authorized, token failed");
     }
@@ -37,4 +39,14 @@ const admin = (req, res, next) => {
   }
 };
 
-export { protect, admin };
+// NEW: Seller middleware
+const seller = (req, res, next) => {
+  if (req.user && req.user.isSeller) {
+    next();
+  } else {
+    res.status(403); // Forbidden
+    throw new Error("Not authorized as a seller");
+  }
+};
+
+export { protect, admin, seller };

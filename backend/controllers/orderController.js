@@ -22,7 +22,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     const order = new Order({
       orderItems: orderItems.map((x) => ({
         ...x,
-        product: x._id, // Map _id to product for Mongoose ref
+        product: x.product || x._id, // Use product if present, fallback to _id
         _id: undefined, // Remove original _id to avoid Mongoose casting issues
       })),
       user: req.user._id, // User who placed the order (from auth middleware)

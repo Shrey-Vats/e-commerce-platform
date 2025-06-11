@@ -10,7 +10,20 @@ import {
   deleteUser,
   getUserById,
   updateUser,
+  getAddresses,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress,
 } from "../controllers/authController.js";
+
+// Address management routes
+router.route("/addresses").get(protect, getAddresses).post(protect, addAddress);
+router
+  .route("/addresses/:idx")
+  .put(protect, updateAddress)
+  .delete(protect, deleteAddress);
+router.route("/addresses/default/:idx").put(protect, setDefaultAddress);
 import { protect, admin } from "../middlewares/authMiddleware.js";
 
 router.post("/login", authUser);

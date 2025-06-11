@@ -19,8 +19,10 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 
 // Protected Pages
+
 import Checkout from "../pages/Checkout";
 import UserProfileScreen from "../pages/UserProfileScreen";
+import OrderSuccess from "../pages/OrderSuccess";
 
 // Admin Pages
 import AdminDashboard from "../pages/AdminDashboard";
@@ -29,10 +31,17 @@ import ProductEditScreen from "../pages/ProductEditScreen";
 import OrderListScreen from "../pages/OrderListScreen";
 import OrderDetailsScreen from "../pages/OrderDetailsScreen";
 import UserListScreen from "../pages/UserListScreen";
+import BannerManagement from "../pages/BannerManagement";
+
+// Seller Pages (NEW IMPORTS - ADD THESE LINES)
+import SellerDashboard from "../pages/SellerDashboard";
+import CreateBrand from "../pages/CreateBrand";
+import UploadProduct from "../pages/UploadProduct";
 
 // Route Protectors
 import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
+import SellerRoute from "./SellerRoute"; // NEW IMPORT - ADD THIS LINE
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,6 +59,23 @@ const router = createBrowserRouter(
         <Route path="" element={<PrivateRoute />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<UserProfileScreen />} />
+          <Route path="/order-success/:id" element={<OrderSuccess />} />
+        </Route>
+      </Route>
+
+      {/* Seller Specific Routes (NEW BLOCK - ADD THIS ENTIRE BLOCK) */}
+      {/* This block should be added immediately after the closing </Route> tag of the Main Layout block */}
+      <Route path="/seller" element={<MainLayout />}>
+        {" "}
+        {/* Use MainLayout for seller pages too */}
+        <Route path="" element={<SellerRoute />}>
+          {" "}
+          {/* Protects all nested seller routes */}
+          <Route index={true} element={<SellerDashboard />} /> {/* /seller */}
+          <Route path="brand" element={<CreateBrand />} /> {/* /seller/brand */}
+          <Route path="products/upload" element={<UploadProduct />} />{" "}
+          {/* /seller/products/upload */}
+          {/* Add more seller routes here later, e.g., <Route path="products" element={<SellerProductList />} /> */}
         </Route>
       </Route>
 
@@ -65,6 +91,7 @@ const router = createBrowserRouter(
           <Route path="orders" element={<OrderListScreen />} />
           <Route path="order/:id" element={<OrderDetailsScreen />} />
           <Route path="users" element={<UserListScreen />} />
+          <Route path="banners" element={<BannerManagement />} />
           {/* Add more admin routes here */}
         </Route>
       </Route>

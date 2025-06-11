@@ -19,6 +19,16 @@ const AdminLayout = () => {
           <ul className="space-y-4">
             <li>
               <Link
+                to="/admin/banners"
+                className="flex items-center px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-700 transition-colors duration-200"
+              >
+                {/* You can use a suitable icon here, e.g., FaImage or FaCube */}
+                <FaCube className="mr-3 text-xl" />
+                Banners
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/admin"
                 className="flex items-center px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-700 transition-colors duration-200"
               >

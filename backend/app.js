@@ -10,7 +10,8 @@ import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 import userRoutes from "./routes/authRoutes.js"; // Correct import for your user routes
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-import bannerRoutes from "./routes/bannerRoutes.js"; // <<< NEW: Import banner routes
+import bannerRoutes from "./routes/bannerRoutes.js";
+import sellerRoutes from "./routes/sellerRoutes.js"; // <<< NEW: Import seller routes
 
 import cors from "cors";
 
@@ -39,7 +40,8 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/banners", bannerRoutes); // <<< NEW: Mount banner routes
+app.use("/api/banners", bannerRoutes);
+app.use("/api/sellers", sellerRoutes); // <<< NEW: Mount seller routes
 
 // Basic route for testing
 app.get("/", (req, res) => {

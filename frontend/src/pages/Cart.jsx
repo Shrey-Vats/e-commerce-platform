@@ -1,15 +1,16 @@
 // frontend/src/pages/Cart.jsx
 
-import React from "react"; // Removed useState, useEffect as they are no longer needed for cartItems
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaTrash, FaShoppingCart } from "react-icons/fa";
-import { useCart } from "../context/CartContext"; // <<< NEW: Import useCart hook
+import { useCart } from "../context/CartContext";
+import useAuth from "../hooks/useAuth";
 
 const Cart = () => {
   const navigate = useNavigate();
-  // NEW: Get cartItems and cart manipulation functions from the context
   const { cartItems, removeFromCart, updateCartItemQty } = useCart();
+  const { userInfo } = useAuth();
 
   // The local state and useEffect for cartItems are now removed.
   // The cartItems are directly from the global context.
@@ -27,7 +28,11 @@ const Cart = () => {
   };
 
   const checkoutHandler = () => {
-    navigate("/login?redirect=/checkout"); // Redirect to login if not authenticated, then checkout
+    if (userInfo) {
+      navigate("/checkout");
+    } else {
+      navigate("/login?redirect=/checkout");
+    }
   };
 
   // NEW: Calculate totals from localStorage, as CartContext now updates them there

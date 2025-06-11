@@ -18,11 +18,21 @@ const reviewSchema = mongoose.Schema(
 
 const productSchema = mongoose.Schema(
   {
-    user: {
+    seller: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "User", // References the User model (who created the product)
+      ref: "User", // References the User model (seller/owner of the product)
     },
+    images: [
+      {
+        type: String,
+      },
+    ],
+    videos: [
+      {
+        type: String,
+      },
+    ],
     name: {
       type: String,
       required: true,
